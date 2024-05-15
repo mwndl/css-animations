@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animation Example</title>
+
+  <style>
+        body,
+    html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        /* Para evitar barras de rolagem */
+    }
+
+    .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, #292398, #262094);
+        z-index: -1;
+    }
+
+    .bubble-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    .bubble {
+        position: absolute;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+@keyframes bubbleAnimation {
+    0% {
+        bottom: -var(--bubble-size);
+        transform: translateY(0) translateX(calc(25px + var(--translate-x-offset)));
+        animation-name: bubbleFadeIn;
+        animation-timing-function: ease-in-out;
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(calc(-25px + var(--translate-x-offset)));
+        animation-timing-function: ease-in-out; /* Adicionando a função de animação */
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(calc(25px + var(--translate-x-offset)));
+        animation-timing-function: ease-in-out; /* Adicionando a função de animação */
+    }
+    100% {
+        bottom: 100%;
+        transform: translateY(-100%) translateX(calc(25px + var(--translate-x-offset)));
+        animation-name: bubbleFadeOut;
+        animation-timing-function: ease-in-out;
+    }
+}
+
+    
+
+  </style>
+</head>
+<body>
+  <div class="background">
+    <div class="bubble-container">
+      <!-- Bubble serão adicionadas dinamicamente via JavaScript -->
+    </div>
+  </div>
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bubbleContainer = document.querySelector('.bubble-container');
+    
+    function createBubble() {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        const size = getRandomSize();
+        const x = getRandomX();
+        const translateXOffset = getRandomTranslateXOffset(); 
+        const color = getRandomColor(); // Obtenha uma cor aleatória dentre as cores definidas
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${x}%`;
+        bubble.style.bottom = `-${size}px`;
+        bubble.style.animationDuration = `${size / 5}s`;
+        bubble.style.animationTimingFunction = `linear`;
+        bubble.style.animationName = 'bubbleAnimation';
+        bubble.style.setProperty('--translate-x-offset', `${translateXOffset}px`); 
+        bubble.style.backgroundColor = color; // Defina a cor da bolha
+        bubbleContainer.appendChild(bubble);
+        
+        bubble.addEventListener('animationend', function() {
+            bubble.remove();
+        });
+    }
+
+    function getRandomColor() {
+        const colors = ['#33a0cf56', '#63cee6ee', '#4061f2de']; // Defina as cores que deseja usar
+        const randomIndex = Math.floor(Math.random() * colors.length); // Escolha um índice aleatório das cores definidas
+        return colors[randomIndex]; // Retorna a cor correspondente ao índice aleatório
+    }
+    
+    // Função para gerar um número aleatório entre dois valores
+    function getRandomBetween(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+    
+    // Função para obter um tamanho aleatório para a bolha
+    function getRandomSize() {
+        return getRandomBetween(50, 250);
+    }
+    
+    
+    function getRandomX() {
+        return getRandomBetween(0, 100); // Valor em porcentagem
+    }
+    
+    // Nova função para obter um deslocamento horizontal aleatório
+    function getRandomTranslateXOffset() {
+        return getRandomBetween(-30, 30); // Altere o intervalo conforme necessário
+    }
+    
+    // Gerar as bolhas a cada intervalo aleatório
+    setInterval(createBubble, getRandomBetween(1400, 5000)); // quanto maior, menor
+});
+
+</script>
+</html>
