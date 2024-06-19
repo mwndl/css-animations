@@ -69,56 +69,69 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const bubbleContainer = document.querySelector('.bubble-container');
-        
-        function createBubble() {
-            const bubble = document.createElement('div');
-            bubble.classList.add('bubble');
-            const size = getRandomSize();
-            const x = getRandomX();
-            const translateXOffset = getRandomTranslateXOffset();
-            const color = getRandomColor();
-            bubble.style.width = `${size}px`;
-            bubble.style.height = `${size}px`;
-            bubble.style.left = `${x}%`;
-            bubble.style.bottom = `-${size}px`;
-            bubble.style.animationDuration = `${size / 5}s`;
-            bubble.style.animationTimingFunction = `linear`;
-            bubble.style.animationName = 'bubbleAnimation';
-            bubble.style.setProperty('--translate-x-offset', `${translateXOffset}px`);
-            bubble.style.backgroundColor = color;
-            bubbleContainer.appendChild(bubble);
-            
-            bubble.addEventListener('animationend', function() {
-                bubble.remove();
-            });
-        }
+document.addEventListener('DOMContentLoaded', function() {
+  const bubbleContainer = document.querySelector('.bubble-container');
+  let generateBubbles = true; // Flag para controlar a geração de bolhas
 
-        function getRandomColor() {
-            const colors = ['#33a0cf56', '#63cee6ee', '#4061f2de'];
-            const randomIndex = Math.floor(Math.random() * colors.length);
-            return colors[randomIndex];
-        }
+  function handleVisibilityChange() {
+    if (document.hidden) {
+      generateBubbles = false; // Se a aba estiver oculta, pare de gerar bolhas
+    } else {
+      generateBubbles = true; // Se a aba estiver visível, retome a geração de bolhas
+    }
+  }
 
-        function getRandomBetween(min, max) {
-            return Math.random() * (max - min) + min;
-        }
+  document.addEventListener('visibilitychange', handleVisibilityChange);
 
-        function getRandomSize() {
-            return getRandomBetween(50, 250);
-        }
+  function createBubble() {
+    if (!generateBubbles) return; // Se não for para gerar bolhas, saia da função
 
-        function getRandomX() {
-            return getRandomBetween(0, 100);
-        }
+    const bubble = document.createElement('div');
+    bubble.classList.add('bubble');
+    const size = getRandomSize();
+    const x = getRandomX();
+    const translateXOffset = getRandomTranslateXOffset();
+    const color = getRandomColor();
+    bubble.style.width = `${size}px`;
+    bubble.style.height = `${size}px`;
+    bubble.style.left = `${x}%`;
+    bubble.style.bottom = `-${size}px`;
+    bubble.style.animationDuration = `${size / 5}s`;
+    bubble.style.animationTimingFunction = `linear`;
+    bubble.style.animationName = 'bubbleAnimation';
+    bubble.style.setProperty('--translate-x-offset', `${translateXOffset}px`);
+    bubble.style.backgroundColor = color;
+    bubbleContainer.appendChild(bubble);
 
-        function getRandomTranslateXOffset() {
-            return getRandomBetween(-30, 30);
-        }
-
-        setInterval(createBubble, getRandomBetween(1400, 5000));
+    bubble.addEventListener('animationend', function() {
+      bubble.remove();
     });
+  }
+
+  function getRandomColor() {
+    const colors = ['#33a0cf56', '#63cee6ee', '#4061f2de'];
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+  }
+
+  function getRandomBetween(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function getRandomSize() {
+    return getRandomBetween(50, 250);
+  }
+
+  function getRandomX() {
+    return getRandomBetween(0, 100);
+  }
+
+  function getRandomTranslateXOffset() {
+    return getRandomBetween(-30, 30);
+  }
+
+  setInterval(createBubble, getRandomBetween(1400, 5000));
+});
   </script>
 </body>
 </html>

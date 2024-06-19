@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#292398"/>
+  <title>Animation Example - Horizontal Rectangles</title>
+
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, #292398, #262094);
+      z-index: -1;
+    }
+
+    .rectangle-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .rectangle {
+      position: absolute;
+      border-radius: 50px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      animation: rectangleAnimation linear forwards;
+    }
+
+    @keyframes rectangleAnimation {
+      0% {
+        left: -600px; /* Inicia fora da tela à esquerda */
+        opacity: 0.6;
+      }
+      100% {
+        left: 110%; /* Termina fora da tela à direita */
+        opacity: 0.4;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background">
+    <div class="rectangle-container">
+      <!-- Rectangles will be dynamically added via JavaScript -->
+    </div>
+  </div>
+
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const rectangleContainer = document.querySelector('.rectangle-container');
+  let generateRectangles = true; // Flag para controlar a geração de retângulos
+
+  function handleVisibilityChange() {
+    if (document.hidden) {
+      generateRectangles = false; // Se a aba estiver oculta, pare de gerar retângulos
+    } else {
+      generateRectangles = true; // Se a aba estiver visível, retome a geração de retângulos
+    }
+  }
+
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+
+  function createRectangle() {
+    if (!generateRectangles) return; // Se não for para gerar retângulos, saia da função
+
+    const rectangle = document.createElement('div');
+    rectangle.classList.add('rectangle');
+    const width = getRandomWidth();
+    const height = getRandomHeight();
+    const color = getRandomColor();
+    const delay = getRandomDelay();
+    rectangle.style.width = `${width}px`;
+    rectangle.style.height = `${height}px`;
+    rectangle.style.left = `-10%`; /* Começa fora da tela à esquerda */
+    rectangle.style.top = `${getRandomPosition()}%`;
+    rectangle.style.animationDuration = `${getRandomDuration()}s`;
+    rectangle.style.backgroundColor = color;
+    rectangleContainer.appendChild(rectangle);
+
+    rectangle.addEventListener('animationend', function() {
+      rectangle.remove();
+    });
+  }
+
+  function getRandomColor() {
+    const colors = [
+        '#7C61E6', // Lilás claro
+        '#A854FF', // Roxo claro
+        '#FF54DA', // Rosa claro
+        '#54FFA6', // Verde menta
+        '#FFA654', // Laranja
+        '#FFD154', // Amarelo
+        '#54E6FF', // Azul claro
+        '#54B3FF', // Azul celeste
+        '#FF5478', // Vermelho claro
+        '#54FFD6'  // Turquesa
+        ];
+
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+  }
+
+  function getRandomBetween(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function getRandomWidth() {
+    return getRandomBetween(200, 600);
+  }
+
+  function getRandomHeight() {
+    return getRandomBetween(50, 100);
+  }
+
+  function getRandomPosition() {
+    const sections = [10, 30, 50, 70, 90];
+    const randomIndex = Math.floor(Math.random() * sections.length);
+    return sections[randomIndex];
+  }
+
+  function getRandomDuration() {
+    return getRandomBetween(10, 20);
+  }
+
+  function getRandomDelay() {
+    return getRandomBetween(0, 10);
+  }
+
+  setInterval(createRectangle, getRandomBetween(1500, 3000));
+});
+  </script>
+</body>
+</html>
